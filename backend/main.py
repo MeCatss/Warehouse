@@ -1,13 +1,19 @@
 from fastapi import FastAPI
-from database import products
+# from database import products
+from services import ProductService
 
 app = FastAPI()
+product_service = ProductService()
 
 @app.get("/")
-def main():
-    return {"message": "Warehouse API running"}
+def connection_test():
+    return product_service.contest()
 
 @app.get("/products")
-def get_products():
-    result = list(products.find({}, {"_id": 0}))
-    return {"products": result}
+def get_product():
+    return product_service.get_all_products()
+
+
+
+
+
