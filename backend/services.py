@@ -1,6 +1,7 @@
 from database import products, history
 from bson import ObjectId
 from datetime import datetime
+from pymongo import ReturnDocument
 
 class ProductService:
     def __init__(self):
@@ -31,9 +32,17 @@ class ProductService:
             "amount": product_data["Stock_Quantity"],
             "date": datetime.now()
         })
-
         return {"message": "Product added", "id": str(result.inserted_id)}
-    # def restock_product(self, id):
+    
+    def restock_product(self, id: str, quantity:int):
+        updated_product = self.collection.find_one_and_update(
+            {"_id": ObjectId(id)}, 
+            {"$inc": {"stock": quantity}}, 
+            return_document=ReturnDocument.AFTER)
+        if updated_product:
+            updated_product["_id"] = str(updated_product["_id"])
+            return {"message": updated_product}
+        return {"error"}
 
     # def remove_product(self, id):
 

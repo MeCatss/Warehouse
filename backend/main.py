@@ -22,8 +22,13 @@ def get_history():
     return HistoryService.history_product()
 
 @app.post("/products")
-def add_prodct(product: ProductModel):
-    return product_service.add_product(product.dict())
+def add_product(payload: ProductModel):
+    return product_service.add_product(payload.dict())
+
+@app.put("/products/{product_id}/restock")
+def restock_product(product_id: str, quantity: int):
+    return product_service.restock_product(product_id, quantity)
+
 
 
 
