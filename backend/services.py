@@ -1,6 +1,6 @@
 from database import products, history
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timedelta
 from pymongo import ReturnDocument
 
 class ProductService:
@@ -87,10 +87,46 @@ class ProductService:
 class HistoryService:
     def __init__(self):
         self.history = history
+
     def history_product(self): #sort by product submitted 
         result = list(self.history.find({}, {"_id": 0}))
         return {"history": result}
 
+class KPIService:
+    def __init__(self):
+        self.collection = products
 
-# PUT /products/{id} — edit product
+    def get_total_products(self):
+        total = self.collection.count_documents({})
+        return {"total_products": total}
+
+    def get_total_stock(self):
+        result = list(self.collection.aggregate([
+        {"$group": {"_id": None, "total": {"$sum": "$Stock_Quantity"}}}
+        ]))
+        return {"total_stock_quantity": result}
+
+    def get_out_of_stock(self):
+        result = list(self.collection.find(
+            {"Stock_Quantity": 0}, 
+            {"_id": 0, "Product_Name": 1, "Stock_Quantity": 1}
+        ))
+        return {"out of stock": result, "Total 0 Stock": len(result)}
+
+    def get_expiring_soon(self):
+        now = datetime.now()
+        thirty_days = now + timedelta(days=30)
+        result = list(self.collection.find(
+            {"Expiration_Date": {"$gte": now, "$lte": thirty_days}},
+            {"_id": 0, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
+        ))
+        return {"expiring_soon": result, "count": len(result)}
+
+    def get_expired(self):
+            now = datetime.now()
+            result = list(self.collection.find(
+                {"Expiration_Date": {"$lte": now}},
+                {"_id": 0, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
+            ))
+            return {"expired": result, "count": len(result)}
 # GET /kpi — total products, total stock, low stock count, expiring soon count

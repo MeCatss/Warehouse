@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from models import ProductModel, EditModel
-from services import ProductService, HistoryService
+from services import ProductService, HistoryService, KPIService
 
 app = FastAPI()
 product_service = ProductService()
 history_service = HistoryService()
+kpi_service = KPIService()
+
 @app.get("/")
 def connection_test():
     return product_service.con_test()
@@ -16,10 +18,6 @@ def get_product():
 @app.get("/products/{id}")
 def getone_product(id):
     return product_service.get_one_products(id)
-
-@app.get("/history")
-def get_history():
-    return history_service.history_product()
 
 @app.post("/products")
 def add_product(product_data: ProductModel):
@@ -36,5 +34,29 @@ def restock_product(product_id: str, quantity: int):
 @app.put("/products/{product_id}")
 def updateproduct(product_id: str, product_data: EditModel):
     return product_service.edit_product(product_id, product_data.model_dump())
+# History log fetch
+@app.get("/history")
+def get_history():
+    return history_service.history_product()
 
+# Key Performance Indicator (KPI)
 
+@app.get("/total-products")
+def get_total_products():
+    return kpi_service.get_total_products()
+
+@app.get("/total-stock")
+def get_total_stock():
+    return kpi_service.get_total_stock()
+
+@app.get("/out-stock")
+def out_of_stock():
+    return kpi_service.get_out_of_stock()
+
+@app.get("/expired-soon")
+def expired_soon():
+    return kpi_service.get_expiring_soon()
+
+@app.get("/expired")
+def expired_soon():
+    return kpi_service.get_expired()
