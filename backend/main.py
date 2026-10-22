@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from models import ProductModel, EditModel
+from fastapi.middleware.cors import CORSMiddleware
 from services import ProductService, HistoryService, KPIService
 
 app = FastAPI()
@@ -60,3 +61,10 @@ def expired_soon():
 @app.get("/expired")
 def expired_soon():
     return kpi_service.get_expired()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

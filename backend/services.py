@@ -104,7 +104,7 @@ class KPIService:
         result = list(self.collection.aggregate([
         {"$group": {"_id": None, "total": {"$sum": "$Stock_Quantity"}}}
         ]))
-        return {"total_stock_quantity": result}
+        return {"total_stock_quantity": result[0]["total"] if result else 0}
 
     def get_out_of_stock(self):
         result = list(self.collection.find(
