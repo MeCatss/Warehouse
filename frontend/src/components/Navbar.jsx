@@ -2,7 +2,7 @@ import axios from 'axios'
 import {useState, useEffect} from 'react'
 
 const Navbar = () => {
-    const [productscount, setproductscount] = useState();// to fetch full movie data
+    const [productscount, setproductscount] = useState();
     useEffect(() => {
         const gettotalcount = async () => {
         const res = await axios('http://127.0.0.1:8000/total-products');
@@ -11,32 +11,29 @@ const Navbar = () => {
         gettotalcount();
     }, []);
 
-    const [stockcount, setstockcount] = useState();// to fetch full movie data
+    const [stockcount, setstockcount] = useState();
     useEffect(() => {
         const gettotalstock = async () => {
         const res = await axios('http://127.0.0.1:8000/total-stock');
         setstockcount(res.data.total_stock_quantity);
-        console.log("pepe", res.data.total_stock_quantity)
         };
         gettotalstock();
     }, []);
 
-    const [outstockcount, setoutstockcount] = useState();// to fetch full movie data
+    const [outstockcount, setoutstockcount] = useState();
     useEffect(() => {
         const getoutstock = async () => {
         const res = await axios('http://127.0.0.1:8000/out-stock');
         setoutstockcount(res.data["Total 0 Stock"]);
-        console.log("pepe2", outstockcount)
         };
         getoutstock();
     }, []);
 
-    const [expiredsoon, setexpiredsoon] = useState();// to fetch full movie data
+    const [expiredsoon, setexpiredsoon] = useState();
     useEffect(() => {
         const getexpiredsoon = async () => {
         const res = await axios('http://127.0.0.1:8000/expired-soon');
         setexpiredsoon(res.data['count']);
-        console.log("pepe2", expiredsoon)
         };
         getexpiredsoon();
     }, []);
