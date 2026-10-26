@@ -25,7 +25,7 @@ return (
             </tr>
         </thead>
         <tbody >
-            {productlist.map((product) => (
+            {productlist.slice(0, 5).map((product) => ( //////dont forget to remove slice
             <tr key={product._id}>
                 <td>{product.Product_Name}</td>
                 <td>{product.Category}</td>

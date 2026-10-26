@@ -43,6 +43,12 @@ class ProductService:
             return_document=ReturnDocument.AFTER)
         if updated_product:
             updated_product["_id"] = str(updated_product["_id"])
+            self.history.insert_one({
+                        "product_name": updated_product["Product_Name"],
+                        "action": "Restocked",
+                        "amount": None,
+                        "date": datetime.now()
+                    })
             return {"message": updated_product}
         return {"error"}
 
@@ -76,7 +82,7 @@ class ProductService:
         
         self.history.insert_one({
             "product_name": product["Product_Name"],
-            "action": "edited",
+            "action": "Updated",
             "amount": None,
             "changes": updated_fields,
             "date": datetime.now()
