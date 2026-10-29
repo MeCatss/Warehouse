@@ -24,7 +24,7 @@ const Historylog = () => {
                 </tr>
             </thead>
             <tbody >
-                {historylist.slice(0, 5).map((history, index) => ( //////dont forget to remove slice
+                {historylist.slice(-5).map((history, index) => ( //////dont forget to remove slice
                 <tr key={index}>
                     <td>{history.product_name}</td>
                     <td>{history.action}</td>
