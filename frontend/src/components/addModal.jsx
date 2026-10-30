@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from 'axios'
 
-export default function AddModal({ onClose }) {
+export default function AddModal({ onClose, onSuccess }) {
     const next2Year = new Date(new Date().setFullYear(new Date().getFullYear() + 2));
     const [form, setForm] = useState({
         Product_Name: "",
@@ -15,8 +15,6 @@ export default function AddModal({ onClose }) {
         setForm({ ...form, [e.target.name]: e.target.value});
     }
     console.log(form)
-
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -28,6 +26,7 @@ export default function AddModal({ onClose }) {
             console.log(payload)
             const res = await axios.post("http://localhost:8000/products", payload);
             console.log(res.data);
+            onSuccess();
             onClose();
         } catch (err) {
             console.log("gagal", err.message, err.response?.data);
@@ -93,6 +92,9 @@ export default function AddModal({ onClose }) {
                 placeholder="Item Value (Optional)"
                 className="border p-2 w-full"
             />
+            <button onClick={onClose} className="cursor-pointer border px-3 py-2 rounded-lg">
+                Cancel
+            </button>
             <button type="submit" className="border p-2 w-full hover:border-white cursor-pointer">
                 Submit
             </button>

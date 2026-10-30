@@ -1,7 +1,7 @@
 import axios from 'axios'
 import {useState, useEffect} from 'react'
 
-const Navbar = () => {
+const Kpicard = ({refreshKey }) => {
     const [productscount, setproductscount] = useState();
     useEffect(() => {
         const gettotalcount = async () => {
@@ -9,7 +9,7 @@ const Navbar = () => {
         setproductscount(res.data.total_products);
         };
         gettotalcount();
-    }, []);
+    }, [refreshKey]);
 
     const [stockcount, setstockcount] = useState();
     useEffect(() => {
@@ -18,7 +18,7 @@ const Navbar = () => {
         setstockcount(res.data.total_stock_quantity);
         };
         gettotalstock();
-    }, []);
+    }, [refreshKey]);
 
     const [outstockcount, setoutstockcount] = useState();
     useEffect(() => {
@@ -27,7 +27,7 @@ const Navbar = () => {
         setoutstockcount(res.data["Total 0 Stock"]);
         };
         getoutstock();
-    }, []);
+    }, [refreshKey]);
 
     const [expiredsoon, setexpiredsoon] = useState();
     useEffect(() => {
@@ -36,31 +36,35 @@ const Navbar = () => {
         setexpiredsoon(res.data['count']);
         };
         getexpiredsoon();
-    }, []);
+    }, [refreshKey]);
     return(
-        <nav className="bg-zinc-900 px-8 py-4 flex items-center justify-between">
-            <h1 className='text-white font-bold text-xl'>Warehouse IMS</h1>
-            <div className='flex gap-6'>
+        <div className="w-full flex items-center justify-between gap-12 bg-white border-b border-zinc-200 px-6 py-4">
+            <h2 className="text-lg font-semibold shrink-0">inventoryName</h2>
+            <div className='flex gap-8'>
                 <div>
-                    <p className='text-zinc-400 text-xs'>Total Products</p>
-                    <p className="text-white font-bold text-lg">{productscount}</p>
+                    <p className='text-xs text-zinc-500'>Total Products</p>
+                    <p className="text-xl font-semibold">{productscount}</p>
                 </div>
                 <div>
-                    <p className='text-zinc-400 text-xs'>Total Stocks</p>
-                    <p className="text-white font-bold text-lg">{stockcount}</p>
+                    <p className='text-xs text-zinc-500'>Total Stocks</p>
+                    <p className="text-xl font-semibold">{stockcount}</p>
                 </div>
                 <div>
-                    <p className='text-zinc-400 text-xs'>Out of Stock Products</p>
-                    <p className="text-white font-bold text-lg">{outstockcount}</p>
+                    <p className='text-xs text-zinc-500'>Out of Stock Products</p>
+                    <p className={`text-xl font-semibold ${outstockcount > 0 ? "text-red-600" : ""}`}>
+                        {outstockcount}
+                    </p>
                 </div>
                 <div>
-                    <p className='text-zinc-400 text-xs'>Expiring Soon Product</p>
-                    <p className="text-white font-bold text-lg">{expiredsoon}</p>
+                    <p className='text-xs text-zinc-500'>Expiring Soon Product</p>
+                    <p className={`text-xl font-semibold ${expiredsoon > 0 ? "text-amber-500" : ""}`}>
+                    {expiredsoon}
+                    </p>
                 </div>
 
             </div>
-        </nav>
+        </div>
     )
 }
 
-export default Navbar
+export default Kpicard
