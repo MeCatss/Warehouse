@@ -8,7 +8,7 @@ const Kpicard = ({refreshKey }) => {
     const [productscount, setproductscount] = useState();
     useEffect(() => {
         const gettotalcount = async () => {
-        const res = await axios('http://127.0.0.1:8000/total-products');
+        const res = await axios('/total-products');
         setproductscount(res.data.total_products);
         };
         gettotalcount();
@@ -17,7 +17,7 @@ const Kpicard = ({refreshKey }) => {
     const [stockcount, setstockcount] = useState();
     useEffect(() => {
         const gettotalstock = async () => {
-        const res = await axios('http://127.0.0.1:8000/total-stock');
+        const res = await axios('/total-stock');
         setstockcount(res.data.total_stock_quantity);
         };
         gettotalstock();
@@ -26,7 +26,7 @@ const Kpicard = ({refreshKey }) => {
     const [outstockcount, setoutstockcount] = useState();
     useEffect(() => {
         const getoutstock = async () => {
-        const res = await axios('http://127.0.0.1:8000/out-stock');
+        const res = await axios('/out-stock');
         setoutstockcount(res.data["Total 0 Stock"]);
         };
         getoutstock();
@@ -35,7 +35,7 @@ const Kpicard = ({refreshKey }) => {
     const [expiredsoon, setexpiredsoon] = useState();
     useEffect(() => {
         const getexpiredsoon = async () => {
-        const res = await axios('http://127.0.0.1:8000/expired-soon');
+        const res = await axios('/expired-soon');
         setexpiredsoon(res.data['count']);
         };
         getexpiredsoon();

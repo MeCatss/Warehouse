@@ -6,7 +6,7 @@ const Productlist =  ({refreshKey, onDelete, onEdit, onRestock, onReduce, stockF
     const [productlist, setproductlist] = useState([]);
     useEffect(() => {
         const getproduct = async () => {
-        const res = await axios('http://127.0.0.1:8000/products');
+        const res = await axios('/products');
         setproductlist(res.data.products);
         console.log(res.data.products)
         };

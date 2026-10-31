@@ -10,7 +10,7 @@ export default function RestockModal({ product, mode = "restock", onClose, onSuc
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://127.0.0.1:8000/products/${product._id}/restock`,{
+      await axios.put(`/products/${product._id}/restock`,{
         quantity: isReduce ? -Number(amount) : Number(amount),
     });
       onSuccess();  
