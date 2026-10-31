@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from models import ProductModel, EditModel
+from models import ProductModel, EditModel, RestockModel
 from fastapi.middleware.cors import CORSMiddleware
 from services import ProductService, HistoryService, KPIService
 
@@ -29,8 +29,9 @@ def removeproduct(id):
     return product_service.remove_product(id)
 
 @app.put("/products/{product_id}/restock")
-def restock_product(product_id: str, quantity: int):
-    return product_service.restock_product(product_id, quantity)
+def restock(product_id: str, data: RestockModel):
+    result = product_service.restock_product(product_id, data.quantity)  # keep your existing service name
+    return result
 
 @app.put("/products/{product_id}")
 def updateproduct(product_id: str, product_data: EditModel):
@@ -59,7 +60,7 @@ def expired_soon():
     return kpi_service.get_expiring_soon()
 
 @app.get("/expired")
-def expired_soon():
+def expired():
     return kpi_service.get_expired()
 
 app.add_middleware(

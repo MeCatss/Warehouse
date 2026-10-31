@@ -1,15 +1,18 @@
 import axios from "axios";
 import {useState} from "react"
+import { X } from "lucide-react";
 
-export default function RestockModal({ product, onClose, onSuccess }) {
+export default function RestockModal({ product, mode = "restock", onClose, onSuccess }) {
+  const inputClass = "bg-zinc-100 rounded-lg px-3 py-2 w-full text-sm outline-none focus:ring-2 focus:ring-zinc-400";
+  const labelClass = "block text-sm font-medium mb-1.5";
   const [amount, setAmount] = useState("");
+  const isReduce = mode === "reduce";
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://127.0.0.1:8000/products/${product._id}/restock`,
-        null,
-        { params: { quantity: Number(amount) } }
-      );
+      await axios.put(`http://127.0.0.1:8000/products/${product._id}/restock`,{
+        quantity: isReduce ? -Number(amount) : Number(amount),
+    });
       onSuccess();  
       onClose();
     } catch (err) {
@@ -18,32 +21,45 @@ export default function RestockModal({ product, onClose, onSuccess }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-lg p-6 w-96"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2>Restock {product.Product_Name}</h2>
-        <form onSubmit={handleSubmit} className="space-y-3 mt-4">
-          <p className="text-sm text-zinc-500">Current stock: {product.Stock_Quantity}</p>
+  <div onClick={onClose} className="fixed z-50 inset-0 bg-black/50 flex items-center justify-center p-4">
+    <div onClick={(e) => e.stopPropagation()} className="relative bg-white rounded-xl p-6 w-full max-w-md">
+      <button type="button" onClick={onClose} className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-900 cursor-pointer">
+        <X size={18} />
+      </button>
+      <h2 className="text-lg font-semibold">{isReduce ? "Reduce" : "Restock"} Item</h2>
+      <p className="text-sm text-zinc-500 mb-5">
+        {product.Product_Name} · Current stock: {product.Stock_Quantity}
+      </p>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className={labelClass}>
+            {isReduce ? "Amount to Remove *" : "Amount to Add *"}
+          </label>
           <input
             type="number"
             min="1"
+            max={isReduce ? product.Stock_Quantity : undefined}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            placeholder="Amount to add"
-            className="border p-2 w-full"
+            placeholder="0"
+            className={inputClass}
             required
           />
-          <div className="flex justify-end gap-2">
-            <button type="button" onClick={onClose} className="border px-3 py-2 rounded-lg cursor-pointer">Cancel</button>
-            <button type="submit" className="bg-zinc-950 text-white px-3 py-2 rounded-lg cursor-pointer">Restock</button>
-          </div>
-        </form>
-      </div>
+        </div>
+
+        <div className="flex justify-end gap-2 pt-2">
+          <button type="button" onClick={onClose}
+            className="border border-zinc-200 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer hover:bg-zinc-50">
+            Cancel
+          </button>
+          <button type="submit"
+            className="bg-zinc-950 hover:bg-zinc-800 text-white px-4 py-2 rounded-lg text-sm font-medium cursor-pointer">
+            {isReduce ? "Reduce" : "Restock"}
+          </button>
+        </div>
+      </form>
     </div>
-  );
+  </div>
+);
 }

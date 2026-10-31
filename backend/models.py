@@ -10,6 +10,16 @@ class ProductModel(BaseModel):
     Stock_Quantity: int = Field(default=0, description="Initial stock level")
     Unit_Price: Optional[float] = Field(default=0, description="Product Price/Value")
 
+class RestockModel(BaseModel):
+    quantity: int
+
+    @field_validator("quantity")
+    @classmethod
+    def not_zero(cls, v):
+        if v == 0:
+            raise ValueError("quantity cannot be 0")
+        return v
+
 class EditModel(BaseModel):
     Product_Name: Optional[str] = None
     Category: Optional[str] = None

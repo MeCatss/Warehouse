@@ -36,21 +36,26 @@ class ProductService:
         
         return {"message": "Product added", "id": str(result.inserted_id)}
     
-    def restock_product(self, id: str, quantity:int):
-        updated_product = self.collection.find_one_and_update(
-            {"_id": ObjectId(id)}, 
-            {"$inc": {"Stock_Quantity": quantity}}, 
-            return_document=ReturnDocument.AFTER)
-        if updated_product:
-            updated_product["_id"] = str(updated_product["_id"])
+    def restock_product(self, id: str, quantity: int):
+        query = {"_id": ObjectId(id)}
+        if quantity < 0:
+            query["Stock_Quantity"] = {"$gte": -quantity}  # block going below 0
+
+        product = self.collection.find_one_and_update(
+            query,
+            {"$inc": {"Stock_Quantity": quantity}},
+            return_document=ReturnDocument.AFTER,
+        )
+        if product:
+            product["_id"] = str(product["_id"])
             self.history.insert_one({
-                        "product_name": updated_product["Product_Name"],
-                        "action": "Restocked",
-                        "amount": None,
-                        "date": datetime.now()
-                    })
-            return {"message": updated_product}
-        return {"error"}
+                "product_name": product["Product_Name"],
+                "action": "Restocked" if quantity > 0 else "Reduced",
+                "amount": abs(quantity),
+                "date": datetime.now(),
+            })
+            return {"message": product}
+        return None
 
     def remove_product(self, id):
         product = self.collection.find_one({"_id": ObjectId(id)})
@@ -115,8 +120,10 @@ class KPIService:
     def get_out_of_stock(self):
         result = list(self.collection.find(
             {"Stock_Quantity": 0}, 
-            {"_id": 0, "Product_Name": 1, "Stock_Quantity": 1}
+            {"_id": 1, "Product_Name": 1, "Stock_Quantity": 1}
         ))
+        for p in result:
+            p["_id"] = str(p["_id"])
         return {"out of stock": result, "Total 0 Stock": len(result)}
 
     def get_expiring_soon(self):
@@ -124,15 +131,19 @@ class KPIService:
         thirty_days = now + timedelta(days=30)
         result = list(self.collection.find(
             {"Expiration_Date": {"$gte": now, "$lte": thirty_days}},
-            {"_id": 0, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
+            {"_id": 1, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
         ))
+        for p in result:
+            p["_id"] = str(p["_id"])
         return {"expiring_soon": result, "count": len(result)}
 
     def get_expired(self):
             now = datetime.now()
             result = list(self.collection.find(
                 {"Expiration_Date": {"$lte": now}},
-                {"_id": 0, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
+                {"_id": 1, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
             ))
+            for p in result:
+                p["_id"] = str(p["_id"])
             return {"expired": result, "count": len(result)}
 # GET /kpi — total products, total stock, low stock count, expiring soon count

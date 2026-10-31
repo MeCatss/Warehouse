@@ -2,6 +2,9 @@ import axios from 'axios'
 import {useState, useEffect} from 'react'
 
 const Kpicard = ({refreshKey }) => {
+    const cardClass = "border border-zinc-200 rounded-xl p-5 bg-white";
+    const titleClass = "text-sm font-medium";
+    const subClass = "text-xs text-zinc-500";
     const [productscount, setproductscount] = useState();
     useEffect(() => {
         const gettotalcount = async () => {
@@ -37,34 +40,34 @@ const Kpicard = ({refreshKey }) => {
         };
         getexpiredsoon();
     }, [refreshKey]);
-    return(
-        <div className="w-full flex items-center justify-between gap-12 bg-white border-b border-zinc-200 px-6 py-4">
-            <h2 className="text-lg font-semibold shrink-0">inventoryName</h2>
-            <div className='flex gap-8'>
-                <div>
-                    <p className='text-xs text-zinc-500'>Total Products</p>
-                    <p className="text-xl font-semibold">{productscount}</p>
-                </div>
-                <div>
-                    <p className='text-xs text-zinc-500'>Total Stocks</p>
-                    <p className="text-xl font-semibold">{stockcount}</p>
-                </div>
-                <div>
-                    <p className='text-xs text-zinc-500'>Out of Stock Products</p>
-                    <p className={`text-xl font-semibold ${outstockcount > 0 ? "text-red-600" : ""}`}>
-                        {outstockcount}
-                    </p>
-                </div>
-                <div>
-                    <p className='text-xs text-zinc-500'>Expiring Soon Product</p>
-                    <p className={`text-xl font-semibold ${expiredsoon > 0 ? "text-amber-500" : ""}`}>
-                    {expiredsoon}
-                    </p>
-                </div>
-
+    return (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className={cardClass}>
+            <p className={titleClass}>Total Products</p>
+            <p className="text-2xl font-semibold mt-4">{productscount}</p>
+            <p className={subClass}>Unique items</p>
+            </div>
+            <div className={cardClass}>
+            <p className={titleClass}>Total Stocks</p>
+            <p className="text-2xl font-semibold mt-4">{stockcount}</p>
+            <p className={subClass}>Units in inventory</p>
+            </div>
+            <div className={cardClass}>
+            <p className={titleClass}>Out of Stock</p>
+            <p className={`text-2xl font-semibold mt-4 ${outstockcount > 0 ? "text-red-600" : ""}`}>
+                {outstockcount}
+            </p>
+            <p className={subClass}>Need restocking</p>
+            </div>
+            <div className={cardClass}>
+            <p className={titleClass}>Expiring Soon</p>
+            <p className={`text-2xl font-semibold mt-4 ${expiredsoon > 0 ? "text-amber-500" : ""}`}>
+                {expiredsoon}
+            </p>
+            <p className={subClass}>Nearing expiry</p>
             </div>
         </div>
-    )
+        );
 }
 
 export default Kpicard
