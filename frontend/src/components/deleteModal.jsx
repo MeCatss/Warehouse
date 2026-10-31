@@ -3,7 +3,7 @@ import axios from "axios";
 export default function DeleteModal({ product, onClose, onSuccess }) {
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/products/${product._id}`);
+      await axios.delete(`0/products/${product._id}`);
       onSuccess();
       onClose();
     } catch (err) {
