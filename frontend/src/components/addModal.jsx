@@ -27,7 +27,7 @@ export default function AddModal({ onClose, onSuccess }) {
             Unit_Price: form.Unit_Price ? Number(form.Unit_Price) : null,
             };
             // console.log(payload)
-            const res = await axios.post("http://localhost:8000/products", payload);
+            const res = await axios.post("/products", payload);
             // console.log(res.data);
             onSuccess();
             onClose();

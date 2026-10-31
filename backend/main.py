@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from models import ProductModel, EditModel, RestockModel
 from fastapi.middleware.cors import CORSMiddleware
 from services import ProductService, HistoryService, KPIService
+import os
 
 app = FastAPI()
 product_service = ProductService()
@@ -63,9 +64,11 @@ def expired_soon():
 def expired():
     return kpi_service.get_expired()
 
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )
