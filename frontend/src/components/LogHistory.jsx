@@ -5,7 +5,7 @@ const Historylog = ({refreshKey }) => {
     const [historylist, sethistorylist] = useState([]);
     useEffect(() => {
         const gethistory = async () => {
-        const res = await axios('0/history');
+        const res = await axios('http://127.0.0.1:8000/history');
         sethistorylist(res.data.history);
         console.log(res.data.history)
         };

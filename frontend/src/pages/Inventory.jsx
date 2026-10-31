@@ -24,8 +24,8 @@ const Inventory = () => {
 
     useEffect(() => {
     const getAlerts = async () => {
-        const out = await axios.get("0/out-stock");
-        const exp = await axios.get("0/expired-soon");
+        const out = await axios.get("http://127.0.0.1:8000/out-stock");
+        const exp = await axios.get("http://127.0.0.1:8000/expired-soon");
         setOutOfStock(out.data["out of stock"]);
         setExpiring(exp.data.expiring_soon);
     };

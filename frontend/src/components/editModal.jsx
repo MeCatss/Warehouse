@@ -25,7 +25,7 @@ export default function EditModal({ product, onClose, onSuccess }) {
         Expiration_Date: form.Expiration_Date || null,
         Unit_Price: form.Unit_Price ? Number(form.Unit_Price) : null,
         };
-        await axios.put(`0/products/${product._id}`, payload);
+        await axios.put(`http://127.0.0.1:8000/products/${product._id}`, payload);
         onSuccess();
         onClose();
     } catch (err) {
