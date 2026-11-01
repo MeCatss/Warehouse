@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from 'axios'
-import { X } from "lucide-react";
+import { X } from "lucide-react"
 
 export default function AddModal({ onClose, onSuccess }) {
     const inputClass = "bg-zinc-100 rounded-lg px-3 py-2 w-full text-sm outline-none focus:ring-2 focus:ring-zinc-400";
@@ -10,7 +10,7 @@ export default function AddModal({ onClose, onSuccess }) {
         Product_Name: "",
         Category: "",
         Date_Received: new Date().toISOString().split('T')[0],
-        Expiration_Date: next2Year.toISOString().split('T')[0],
+        Expiration_Date: "",
         Stock_Quantity: "",
         Unit_Price: "",
     });
@@ -23,6 +23,7 @@ export default function AddModal({ onClose, onSuccess }) {
         try {
             const payload = {
             ...form,
+            Expiration_Date: form.Expiration_Date || null,
             Stock_Quantity: Number(form.Stock_Quantity),
             Unit_Price: form.Unit_Price ? Number(form.Unit_Price) : null,
             };
@@ -44,6 +45,7 @@ export default function AddModal({ onClose, onSuccess }) {
       </button>
       <h2 className="text-lg font-semibold">Add New Item</h2>
       <p className="text-sm text-zinc-500 mb-5">Enter the details for the new inventory item.</p>
+      <p className="text-sm text-zinc-500 mb-5">* is Required.</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
@@ -80,7 +82,7 @@ export default function AddModal({ onClose, onSuccess }) {
           </div>
           <div>
             <label className={labelClass}>Expiration Date</label>
-            <input type="date" name="Expiration_Date" value={form.Expiration_Date}
+            <input type="date" name="Expiration_Date" value="Optional"
               onChange={handleChange} className={inputClass} />
           </div>
         </div>

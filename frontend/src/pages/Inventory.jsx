@@ -19,15 +19,18 @@ const Inventory = () => {
         setStockFilter(null);
     } 
     const [outOfStock, setOutOfStock] = useState([]);
+    const [expired, setExpired] = useState([]);
     const [expiring, setExpiring] = useState([]);
     const [stockFilter, setStockFilter] = useState(null);
 
     useEffect(() => {
     const getAlerts = async () => {
         const out = await axios.get("/out-stock");
-        const exp = await axios.get("/expired-soon");
+        const expsoon = await axios.get("/expired-soon");
+        const exp = await axios.get("/expired");
+        setExpired(exp.data.expired);
         setOutOfStock(out.data["out of stock"]);
-        setExpiring(exp.data.expiring_soon);
+        setExpiring(expsoon.data.expiring_soon);
     };
     getAlerts();
     }, [refreshKey]);
@@ -61,6 +64,9 @@ const Inventory = () => {
                 <AlertRow label="Expiring soon" count={expiring.length} color="amber"
                 items={expiring.map((p) => p.Product_Name)}
                 onSelect={() => setStockFilter({ label: "Expiring soon", ids: expiring.map((p) => p._id) })} />
+                <AlertRow label="Expired" count={expired.length} color="red"
+                items={expired.map((p) => p.Product_Name)}
+                onSelect={() => setStockFilter({ label: "Expired", ids: expired.map((p) => p._id) })} />
                     {stockFilter && (
                     <button
                         onClick={() => setStockFilter(null)}

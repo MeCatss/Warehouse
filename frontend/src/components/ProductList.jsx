@@ -8,7 +8,7 @@ const Productlist =  ({refreshKey, onDelete, onEdit, onRestock, onReduce, stockF
         const getproduct = async () => {
         const res = await axios('/products');
         setproductlist(res.data.products);
-        console.log(res.data.products)
+        console.log("sort test", res.data.products)
         };
         getproduct();
     }, [refreshKey]);
@@ -19,7 +19,7 @@ const Productlist =  ({refreshKey, onDelete, onEdit, onRestock, onReduce, stockF
     (p) =>
         (!stockFilter || stockFilter.ids.includes(p._id)) &&
         `${p.Product_Name} ${p.Category}`.toLowerCase().includes(search.toLowerCase())
-    );
+    )
     return (
     <div className="border border-zinc-200 rounded-xl bg-white p-5">
         <h2 className="font-semibold mb-4">Inventory Items</h2>
@@ -43,7 +43,7 @@ const Productlist =  ({refreshKey, onDelete, onEdit, onRestock, onReduce, stockF
                     </tr>
                 </thead>
                 <tbody>
-                    {filtered.map((product) => ( //////dont forget to remove slice
+                    {filtered.map((product) => ( 
                     <tr key={product._id} className='border-b border-zinc-100'>
                         <td className="px-3 py-2">{product.Product_Name}</td>
                         <td className="px-3 py-2">{product.Category}</td>
@@ -67,7 +67,9 @@ const Productlist =  ({refreshKey, onDelete, onEdit, onRestock, onReduce, stockF
                             </div>
                         </td >
                         <td className="px-3 py-2 text-center">{new Date(product.Date_Received).toLocaleDateString()}</td>
-                        <td className="px-3 py-2 text-center">{new Date(product.Expiration_Date).toLocaleDateString()}</td>
+                        <td className="px-3 py-2 text-center">{product.Expiration_Date && new Date(product.Expiration_Date).getFullYear() > 1970
+                            ? new Date(product.Expiration_Date).toLocaleDateString()
+                            : "-"}</td>
                         <td className="px-3 py-2 text-center">{product.Unit_Price != 0
                             ? `$${Number(product.Unit_Price).toLocaleString("en-US", { minimumFractionDigits: 2 })}`
                             : "-"}</td>

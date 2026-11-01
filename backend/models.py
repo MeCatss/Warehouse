@@ -6,7 +6,7 @@ class ProductModel(BaseModel):
     Product_Name: str = Field(default='Name', description="Produck Name")
     Category: str = Field(default='Description', description="Product Description")
     Date_Received: datetime
-    Expiration_Date: Optional[datetime] = Field(default=0, description="Expiration Date (optional)")
+    Expiration_Date: Optional[datetime] = Field(default=None, description="Expiration Date (optional)")
     Stock_Quantity: int = Field(default=0, description="Initial stock level")
     Unit_Price: Optional[float] = Field(default=0, description="Product Price/Value")
 

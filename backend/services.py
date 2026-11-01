@@ -11,8 +11,8 @@ class ProductService:
     def con_test(self):
         return {"Connection Secure"}
 
-    def get_all_products(self): 
-        result = list(self.collection.find({}))
+    def get_all_products(self):
+        result = list(self.collection.find({}).sort("_id", -1))   # sort is on find(), inside list()
         for item in result:
             item["_id"] = str(item["_id"])
         return {"products": result}
@@ -100,7 +100,7 @@ class HistoryService:
         self.history = history
 
     def history_product(self): #sort by product submitted 
-        result = list(self.history.find({}, {"_id": 0}))
+        result = list(self.history.find({}, {"_id": 0}).sort("_id", -1))
         return {"history": result}
 
 class KPIService:
@@ -140,7 +140,7 @@ class KPIService:
     def get_expired(self):
             now = datetime.now()
             result = list(self.collection.find(
-                {"Expiration_Date": {"$lte": now}},
+                {"Expiration_Date": {"$gt": datetime(1971, 1, 1), "$lte": now}},
                 {"_id": 1, "Product_Name": 1, "Expiration_Date": 1, "Stock_Quantity": 1}
             ))
             for p in result:

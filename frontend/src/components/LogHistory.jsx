@@ -16,7 +16,7 @@ const Historylog = ({refreshKey }) => {
     if (a.includes("add")) return "bg-emerald-100 text-emerald-700";
     if (a.includes("restock")) return "bg-blue-100 text-blue-700";
     if (a.includes("reduc")) return "bg-amber-100 text-amber-800";
-    if (a.includes("delet")) return "bg-red-100 text-red-700";
+    if (a.includes("delet") || a.includes("remov")) return "bg-red-100 text-red-700";
     return "bg-zinc-100 text-zinc-600";
     };
 
@@ -28,7 +28,6 @@ const Historylog = ({refreshKey }) => {
         : { text: `+${h.amount}`, style: "text-emerald-600" };
     };
 
-    const sorted = [...historylist].sort((a, b) => new Date(b.date) - new Date(a.date));
     return (
     <div className="border border-zinc-200 rounded-xl bg-white p-4 mt-6 max-w-4xl">
         <h2 className="text-sm font-semibold mb-3">History Log</h2>
@@ -43,7 +42,7 @@ const Historylog = ({refreshKey }) => {
             </tr>
             </thead>
             <tbody>
-            {sorted.map((history, index) => {
+            {historylist.map((history, index) => {
                 const amt = signedAmount(history);
                 return (
                 <tr key={index} className="align-top border-b border-zinc-100">
